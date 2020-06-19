@@ -1,0 +1,50 @@
+def sum_subsets(arr, n, target):
+    """ Function to print the subsets whose sum is equal to the given `target` """
+    # Create the new array with size
+    # equal to array set[] to create
+    # binary array as per n(decimal number)
+    x = [0] * len(arr)
+    j = len(arr) - 1
+
+    # Convert the array into binary array
+    while n > 0:
+        x[j] = n % 2
+        n = n // 2
+        j -= 1
+
+    temp_sum = 0
+
+    # Calculate the sum of this subset
+    for i in range(len(arr)):
+        if x[i] == 1:
+            temp_sum += arr[i]
+
+    # Check whether sum is equal to target, if it is equal, then print the subset
+    if temp_sum == target:
+        print("{", end="")
+        for i in range(len(arr)):
+            if x[i] == 1:
+                print(arr[i], end=", ")
+        print("}, ", end="")
+        return True
+
+    return False
+
+
+def find_subsets(arr, target):
+    """ Function to find the subsets with sum `target` """
+    # Calculate the total no. of subsets
+    x = pow(2, len(arr))
+
+    # Run loop till total no. of subsets and call the function for each subset
+    for i in range(1, x):
+        if sum_subsets(arr, i, target):
+            print()
+            break
+
+
+if __name__ == "__main__":
+    find_subsets([5, 10, 12, 13, 15, 18], 30)
+    find_subsets([1, 2, 7, 3, 5], 13)
+    find_subsets([5, 10, 12, 13, 15, 18], 5)
+    find_subsets([6, 5, 4, 3, 2, 1], 21)
