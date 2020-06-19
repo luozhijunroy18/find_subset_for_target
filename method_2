@@ -1,0 +1,73 @@
+dp = []
+
+
+def find_subset(arr, i, target, p):
+    """ A recursive function to print all subsets with the help of dp[][]. Vector p[] stores current subset. """
+
+    # If we reached end and sum is non-zero. We print p[] only if arr[0] is equal to sun OR dp[0][sum] is true
+    if i == 0 and target != 0 and dp[0][target]:
+        p.append(arr[i])
+        print(p)
+        p.clear()
+        return
+
+    # If sum becomes 0
+    if i == 0 and target == 0:
+        print(p)
+        p.clear()
+        return
+
+    # If given sum can be achieved after ignoring current element
+    if dp[i - 1][target]:
+        b = []
+        b.extend(p)
+        find_subset(arr, i - 1, target, b)
+
+    # If given sum can be achieved after considering current element
+    if target >= arr[i] and dp[i - 1][target - arr[i]]:
+        p.append(arr[i])
+        find_subset(arr, i - 1, target - arr[i], p)
+
+
+def find_all_subset(arr, target):
+    """ Prints all subsets of arr[0..n-1] with sum 0. """
+    n = len(arr)
+
+    # Sum 0 can always be achieved with 0 elements
+    for i in range(n):
+        temp = [False] * (target + 1)
+        # Sum arr[0] can be achieved with single element
+        temp[0] = True
+        dp.append(temp)
+
+    # Sum arr[0] can be achieved with single element
+    if arr[0] <= target:
+        dp[0][arr[0]] = True
+
+    # Fill rest of the entries in dp[][]
+    for i in range(1, n):
+        for j in range(0, target + 1):
+            dp[i][j] = dp[i - 1][j] or dp[i - 1][j - arr[i]] if arr[i] <= j else dp[i - 1][j]
+
+    if not dp[n - 1][target]:
+        print("no solution")
+        return
+
+    # Now recursively traverse dp[][] to find all paths from dp[n-1][sum]
+    find_subset(arr, n - 1, target, [])
+
+
+if __name__ == "__main__":
+    print('----------------------------------------')
+    find_all_subset([5, 10, 12, 13, 15, 18], 30)
+    print('----------------------------------------')
+    find_all_subset([1, 2, 7, 3, 5], 13)
+    print('----------------------------------------')
+    find_all_subset([5, 10, 12, 13, 15, 18], 5)
+    print('----------------------------------------')
+    find_all_subset([6, 5, 4, 3, 2, 1], 21)
+
+
+
+
+
